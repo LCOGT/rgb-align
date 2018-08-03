@@ -11,7 +11,7 @@ from astroscrappy import detect_cosmics
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR)
 
 def reproject_files(ref_image, images_to_align, tmpdir='temp/'):
     identifications = run(ref_image, images_to_align[1:3], visu=False)
@@ -37,7 +37,7 @@ def sort_files_for_colour(file_list):
         filtr = hdrs['filter']
         order = colour_template.get(filtr, None)
         if not order:
-            logger.debug('{} is not a recognised colour filter'.format(filtr))
+            logger.error('{} is not a recognised colour filter'.format(filtr))
             return False
         colours[order] = f
     file_list = [colours[str(i)] for i in range(1,4)]
@@ -86,17 +86,20 @@ def clean_data(data):
     logger.debug('Max after median=%s' % data.max())
     return data
 
-@click.command()
-@click.option('--in_dir', '-i', help='Input folder')
-@click.option("--name", "-n", help="Name of the output file")
-def main(in_dir, name):
+
+def main():
+    TMP_DIR = "/Users/egomez/Downloads/tmp/"
+    in_dir = "/Users/egomez/Downloads/rgb_test/"
+    name = "test.jpg"
     path_match = "*.fits.fz"
     img_list = sorted(glob(os.path.join(in_dir, path_match)))
-    # img_list = reproject_files(img_list[0], img_list, in_dir)
+    img_list = reproject_files(img_list[0], img_list, TMP_DIR)
     # img_list = write_clean_data(img_list)
     img_list = sort_files_for_colour(img_list)
     fits_to_jpg(img_list, os.path.join(in_dir,name), width=1000, height=1000, color=True)
     return
 
 if __name__ == '__main__':
-    main()
+    import timeit
+    setup = "from __main__ import main"
+    print(timeit.timeit("main()", setup=setup, number=10))
