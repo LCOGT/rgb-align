@@ -91,7 +91,7 @@ def main(in_dir, name):
     path_match = "*.fits.fz"
     img_list = sorted(glob(os.path.join(in_dir, path_match)))
     img_list = reproject_files(img_list[0], img_list, in_dir)
-    # img_list = write_clean_data(img_list)
+    img_list = write_clean_data(img_list)
     img_list = sort_files_for_colour(img_list)
     fits_to_jpg(img_list, os.path.join(in_dir,name), width=1000, height=1000, color=True)
     return
