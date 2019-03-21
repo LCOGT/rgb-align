@@ -1,4 +1,5 @@
 astropy
 astroscrappy
+click
 fits_align
 git+https://github.com/LCOGT/fits2image.git@astropy#egg=fits2image

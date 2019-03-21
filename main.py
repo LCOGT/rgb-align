@@ -34,7 +34,9 @@ def sort_files_for_colour(file_list):
         data, hdrs = fits.getdata(f, header=True)
         filtr = hdrs['filter']
         order = colour_template.get(filtr, None)
-        if not order:
+        if not order and filtr == 'R':
+            order = '1'
+        elif not order:
             logger.error('{} is not a recognised colour filter'.format(filtr))
             return False
         colours[order] = f
